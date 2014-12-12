@@ -30,7 +30,7 @@ describe 'puppet_master_manager::active' do
       ).with_content(/\/puppet\/ssl\/ca\/signed/)
       .with_content(/IN_CREATE\,IN_DELETE\,IN_MODIFY /)
       .with_content(/rsync -apu \/etc\/puppetlabs\/puppet\/ssl\/ca\/\* /)
-      .with_content(/root@passive\.puppetlabs\.vm:\/etc\/puppetlabs\/puppet\/ca\/\n/)
+      .with_content(/root@passive\.puppetlabs\.vm:\/etc\/puppetlabs\/puppet\/ssl\/ca\/\n/)
     }
 
     it {

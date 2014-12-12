@@ -39,7 +39,7 @@ describe 'puppet_master_manager::passive' do
         'ensure'  => 'file',
         'owner'   => 'pe-puppet',
         'group'   => 'pe-puppet',
-        'mode'    => '0600',
+        'mode'    => '0400',
       )
     }
 
@@ -66,7 +66,7 @@ describe 'puppet_master_manager::passive' do
         'ensure'  => 'file',
         'owner'   => 'pe-puppet',
         'group'   => 'pe-puppet',
-        'mode'    => '0600',
+        'mode'    => '0400',
       )
     }
 

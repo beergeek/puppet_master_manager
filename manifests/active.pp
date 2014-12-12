@@ -56,7 +56,7 @@ class puppet_master_manager::active (
 
 
 
-  $rsync_ssl_dir        = '/etc/puppetlabs/puppet/ca/'
+  $rsync_ssl_dir        = '/etc/puppetlabs/puppet/ssl/ca/'
   $incron_ssl_condition = "${::settings::ssldir}/ca/signed IN_CREATE,IN_DELETE,IN_MODIFY"
   $rsync_command        = "rsync -apu /etc/puppetlabs/puppet/ssl/ca/*"
   $incron_command       = "${incron_ssl_condition} ${rsync_command} ${rsync_user}@${passive_master}:${rsync_ssl_dir}\n"
