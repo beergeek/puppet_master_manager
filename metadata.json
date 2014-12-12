@@ -1,0 +1,14 @@
+{
+  "name": "beergeek-puppet_master_manager",
+  "version": "0.1.0",
+  "author": "beergeek",
+  "summary": "Module to manage Active Passive Puppet Masters",
+  "license": "Apache 2.0",
+  "source": "https://github.com/beergeek/puppet_master_manager.git",
+  "project_page": "https://github.com/beergeek/puppet_master_manager",
+  "issues_url": "https://github.com/beergeek/puppet_master_manager/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
