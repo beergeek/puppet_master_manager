@@ -20,7 +20,7 @@ class puppet_master_manager::passive {
 
   file { '/etc/puppetlabs/puppet/ssl/private_keys/pe-internal-dashboard.pem':
     ensure  => file,
-    mode    => '0600',
+    mode    => '0400',
     content => file('/etc/puppetlabs/puppet/ssl/private_keys/pe-internal-dashboard.pem'),
   }
 
@@ -36,7 +36,7 @@ class puppet_master_manager::passive {
 
   file { '/etc/puppetlabs/puppet/ssl/private_keys/pe-internal-classifier.pem':
     ensure  => file,
-    mode    => '0600',
+    mode    => '0400',
     content => file('/etc/puppetlabs/puppet/ssl/private_keys/pe-internal-classifier.pem'),
   }
 
