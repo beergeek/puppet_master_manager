@@ -34,7 +34,6 @@
 #
 # [*passive_master*]
 #   Hostname (FQDN) of Passive Master.
-#   Required if Active Master.
 #
 # [*rsync_user*]
 #   User for rsync job to Secondary (Passive) Master.
@@ -60,10 +59,6 @@ class puppet_master_manager (
 ) inherits puppet_master_manager::params {
 
   if $active_server == $::fqdn {
-
-    if ! $passive_master {
-      fail("A Passive Master is required when server has Active Master role")
-    }
 
     class { 'puppet_master_manager::active':
       dump_path        => $dump_path,

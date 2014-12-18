@@ -6,5 +6,6 @@ class puppet_master_manager::params {
   $minute           = '30'
   $monthday         = '*'
   $rsync_user       = 'root'
+  $script_dir       = '/root/scripts'
 
 }

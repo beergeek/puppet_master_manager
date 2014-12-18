@@ -30,7 +30,6 @@
 #
 # [*passive_master*]
 #   Hostname (FQDN) of Passive Master.
-#   Required if Active Master.
 #
 # [*rsync_user*]
 #   User for rsync job to Secondary (Passive) Master.
@@ -45,25 +44,25 @@
 # Copyright 2014 Puppet Labs, unless otherwise noted.
 #
 class puppet_master_manager::active (
-  $passive_master,
   $dump_path        = $puppet_master_manager::params::dump_path,
   $dumpall_monthday = $puppet_master_manager::params::dumpall_monthday,
   $hour             = $puppet_master_manager::params::hour,
   $minute           = $puppet_master_manager::params::minute,
   $monthday         = $puppet_master_manager::params::monthday,
+  $passive_master   = undef,
+  $script_dir       = $puppet_master_manager::params::script_dir,
   $rsync_user       = $puppet_master_manager::params::rsync_user,
 ) inherits puppet_master_manager::params  {
-
-
 
   $rsync_ssl_dir        = '/etc/puppetlabs/puppet/ssl/ca/'
   $incron_ssl_condition = "${::settings::ssldir}/ca/signed IN_CREATE,IN_DELETE,IN_MODIFY"
   $rsync_command        = "rsync -apu /etc/puppetlabs/puppet/ssl/ca/*"
-  $incron_command       = "${incron_ssl_condition} ${rsync_command} ${rsync_user}@${passive_master}:${rsync_ssl_dir}\n"
+  $incron_command       = "${rsync_command} ${rsync_user}@${passive_master}:${rsync_ssl_dir}\n"
 
   File {
-    owner   => 'root',
-    group   => 'root',
+    owner => 'root',
+    group => 'root',
+    mode  => '0644',
   }
 
   Cron {
@@ -74,19 +73,31 @@ class puppet_master_manager::active (
     require  => File['dump_directory'],
   }
 
-  ensure_packages(['rsync','incron'])
+  if $passive_master {
+    ensure_packages(['rsync','incron'])
 
-  file { '/etc/incron.d/sync_certs':
-    ensure  => file,
-    mode    => '0744',
-    content => $incron_command,
-    require => Package['incron'],
-  }
+    file { 'script_dir':
+      ensure => directory,
+    }
 
-  service { 'incrond':
-    ensure    => running,
-    enable    => true,
-    subscribe => File['/etc/incron.d/sync_certs'],
+    file { 'sync_script':
+      ensure  => file,
+      mode    => '0750',
+      content => $incron_command,
+    }
+
+    file { '/etc/incron.d/sync_certs':
+      ensure  => file,
+      mode    => '0744',
+      content => "${incron_ssl_condition} ${script_dir}/sync_script",
+      notify  => Package['incron'],
+    }
+
+    service { 'incrond':
+      ensure    => running,
+      enable    => true,
+      subscribe => File['/etc/incron.d/sync_certs'],
+    }
   }
 
   file { 'dump_directory':
