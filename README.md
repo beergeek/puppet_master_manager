@@ -111,8 +111,8 @@ Directory to store certificate transfer script.
 Defaults to `/root/scripts`.
 
 #####`rsync_user`
- User for rsync job to Secondary (Passive) Master.
- Required if `secondary_master` is present.
+User for rsync job to Secondary (Passive) Master.
+Defaults to `root`.
 
 ## Limitations
 

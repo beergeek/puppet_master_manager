@@ -41,7 +41,7 @@
 #
 # [*rsync_user*]
 #   User for rsync job to Secondary (Passive) Master.
-#   Required if `secondary_master` is present.
+#   Defaults to `root`.
 #
 # === Authors
 #
