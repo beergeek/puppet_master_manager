@@ -15,65 +15,101 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+A module to manage active/passive master pair in PE3.7.1.
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
+Module setups incrond and Postgresql dumps on Active.
 
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+Module manages certificates on Passive.
 
 ## Setup
 
 ### What puppet_master_manager affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+* incrond and job on Active
+* Cron jobs for Postgresql dump on Active
+* Classifier, Dashbaord and Postgresql certs on Passive
 
-### Setup Requirements **OPTIONAL**
+### Setup Requirements
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+#### Active Master
+
+Perform an all-in-one installation via an answers file.
+
+#### Passive Master
+
+Copy the Active Master's answers file to the Passive Master.
+Replace all instances of the Active Master's hostname with the Passive's
+Ensure the `q_puppetagent_server` on the Passive points to the Active.
+Install Puppet. Remove SSL directory on completion.
 
 ### Beginning with puppet_master_manager
 
-The very basic steps needed for a user to get the module up and running.
+Classify active and passive masters with `puppet_master_manager`:
 
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+```puppet
+    class { 'puppet_master_manager':
+      active_master   => 'active.puppetlabs.vm',
+      passive_master  => 'passive.puppetlabs.vm',
+      rsync_user      => 'root',
+    }
+```
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
-
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### Classes
+* `puppet_master_manager`: base class to determine if active or passive master
+* `puppet_master_manager::active`: class to manage active master
+* `puppet_master_manager::passive`: class to manage passive master
+
+### Parameters
+
+#### `puppet_master_manager`
+
+#####`active_server`
+ FQDN of the active Puppet Master.
+ Required.
+
+#####`dump_path`
+ Directory to dump PSQL dumps to if Active Master.
+ Only for Active Puppet Master.
+ Defaults to `/opt/dump`.
+
+#####`hour`
+ Value for the hour(s) to dump Postgresql.
+ Only for Active Puppet Master.
+ Defaults to `23`.
+
+#####`minute`
+ Value for the minute(s) to dump Postgresql.
+ Only for Active Puppet Master.
+ Defaults to `30`.
+
+#####`monthday`
+ Value for the day of month to dump Postgresql
+ Only for Active Puppet Master.
+ Defaults to `*`.
+
+#####`dumpall_monthday`
+ Value for the day of month to dumpall Postgresql
+ Only for Active Puppet Master.
+ Defaults to `1`.
+
+#####`passive_master`
+ Hostname (FQDN) of Passive Master.
+
+#####`rsync_user`
+ User for rsync job to Secondary (Passive) Master.
+ Required if `secondary_master` is present.
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+RHEL 6
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+Submit PRs if you want
 
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
