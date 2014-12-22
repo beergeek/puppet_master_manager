@@ -78,10 +78,12 @@ class puppet_master_manager::active (
 
     file { 'script_dir':
       ensure => directory,
+      path   => $script_dir,
     }
 
     file { 'sync_script':
       ensure  => file,
+      path    => "${script_dir}/sync_script",
       mode    => '0750',
       content => $incron_command,
     }
