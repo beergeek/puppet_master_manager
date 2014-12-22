@@ -41,8 +41,12 @@ Perform an all-in-one installation via an answers file.
 
 Copy the Active Master's answers file to the Passive Master.
 Replace all instances of the Active Master's hostname with the Passive's
-Ensure the `q_puppetagent_server` on the Passive points to the Active.
-Install Puppet. Remove SSL directory on completion.
+Install Puppet.
+Edit the puppet.conf and set the server variable in the `agent` section to be
+the active Puppet master, e.g. `server = active.puppetlabs.vm`.
+Remove the `server` entry from the `main` section.
+Remove SSL directory on completion.
+Run Puppet on the passive master and sign the certificate on the active master
 
 ### Beginning with puppet_master_manager
 
