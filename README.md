@@ -106,6 +106,10 @@ Classify active and passive masters with `puppet_master_manager`:
 #####`passive_master`
  Hostname (FQDN) of Passive Master.
 
+#####`script_dir`
+Directory to store certificate transfer script.
+Defaults to `/root/scripts`.
+
 #####`rsync_user`
  User for rsync job to Secondary (Passive) Master.
  Required if `secondary_master` is present.

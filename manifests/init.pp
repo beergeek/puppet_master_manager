@@ -35,6 +35,10 @@
 # [*passive_master*]
 #   Hostname (FQDN) of Passive Master.
 #
+# [*script_dir*]
+#   Directory to store certificate transfer script.
+#   Defaults to `/root/scripts`.
+#
 # [*rsync_user*]
 #   User for rsync job to Secondary (Passive) Master.
 #   Required if `secondary_master` is present.
@@ -56,6 +60,7 @@ class puppet_master_manager (
   $monthday         = $puppet_master_manager::params::monthday,
   $passive_master   = undef,
   $rsync_user       = $puppet_master_manager::params::rsync_user,
+  $script_dir       = $puppet_master_manager::params::script_dir,
 ) inherits puppet_master_manager::params {
 
   if $active_server == $::fqdn {
