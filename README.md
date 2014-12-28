@@ -74,7 +74,7 @@ Classify active and passive masters with `puppet_master_manager`:
 
 #### `puppet_master_manager`
 
-#####`active_server`
+#####`active_master`
  FQDN of the active Puppet Master.
  Required.
 

@@ -3,7 +3,7 @@
 #
 # === Parameters
 #
-# [*active_server*]
+# [*active_master*]
 #   FQDN of the active Puppet Master.
 #   Required.
 #
@@ -52,7 +52,7 @@
 # Copyright 2014 Puppet Labs, unless otherwise noted.
 #
 class puppet_master_manager (
-  $active_server,
+  $active_master,
   $dump_path        = $puppet_master_manager::params::dump_path,
   $dumpall_monthday = $puppet_master_manager::params::dumpall_monthday,
   $hour             = $puppet_master_manager::params::hour,
@@ -63,7 +63,7 @@ class puppet_master_manager (
   $script_dir       = $puppet_master_manager::params::script_dir,
 ) inherits puppet_master_manager::params {
 
-  if $active_server == $::fqdn {
+  if $active_master == $::fqdn {
 
     class { 'puppet_master_manager::active':
       dump_path        => $dump_path,

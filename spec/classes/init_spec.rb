@@ -2,7 +2,7 @@ require 'spec_helper'
 describe 'puppet_master_manager' do
   let(:params) {
     {
-      :active_server   => 'active.puppetlabs.vm',
+      :active_master   => 'active.puppetlabs.vm',
       :passive_master => 'passive.puppetlabs.vm',
     }
   }
