@@ -92,7 +92,8 @@ class puppet_master_manager::active (
       ensure  => file,
       mode    => '0744',
       content => "${incron_ssl_condition} ${script_dir}/sync_script",
-      notify  => Package['incron'],
+      notify  => Service['incrond'],
+      require => Package['incron'],
     }
 
     service { 'incrond':
