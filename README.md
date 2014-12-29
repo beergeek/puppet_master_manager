@@ -36,6 +36,7 @@ Module manages certificates on Passive.
 #### Active Master
 
 Perform an all-in-one installation via an answers file.
+Access to EPEL repos.
 
 #### Passive Master
 
