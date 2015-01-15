@@ -118,7 +118,6 @@ class puppet_master_manager::active (
   cron { 'puppet_activity_dumps':
     ensure   => present,
     command  => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-activity' > ${dump_path}/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
-    require  => File['dump_directory'],
   }
 
   cron { 'puppet_classifier_dumps':
