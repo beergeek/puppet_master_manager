@@ -20,13 +20,6 @@ describe 'puppet_master_manager::active' do
     }
 
     it {
-      should contain_pe_postgresql__server__config_entry('archive_mode').with(
-        "ensure"  => "present",
-        "value"   => "hot_standby",
-      )
-    }
-
-    it {
       should contain_file('dump_directory').with(
         'ensure'  => 'directory',
         'path'    => '/opt/dump',
@@ -39,7 +32,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_console_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 console' > /opt/dump/console_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c console -f /opt/dump/console_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -51,7 +44,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_activity_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-activity' > /opt/dump/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-activity -f /opt/dump/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -63,7 +56,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_classifier_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-classifier' > /opt/dump/classifier_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-classifier -f /opt/dump/classifier_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -75,7 +68,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_rbac_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-rbac' > /opt/dump/rbac_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-rbac -f /opt/dump/rbac_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -87,7 +80,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_puppetdb_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-puppetdb' > /opt/dump/puppetdb_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-puppetdb -f /opt/dump/puppetdb_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -99,7 +92,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_dumpall').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dumpall' > /opt/dump/dumpall_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dumpall -f /opt/dump/dumpall_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -178,7 +171,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_console_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 console' > /opt/dump/console_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c console -f /opt/dump/console_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -190,7 +183,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_activity_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-activity' > /opt/dump/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-activity -f /opt/dump/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -202,7 +195,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_classifier_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-classifier' > /opt/dump/classifier_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-classifier -f /opt/dump/classifier_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -214,7 +207,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_rbac_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-rbac' > /opt/dump/rbac_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-rbac -f /opt/dump/rbac_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -226,7 +219,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_puppetdb_dumps').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-puppetdb' > /opt/dump/puppetdb_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-puppetdb -f /opt/dump/puppetdb_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -238,7 +231,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_cron('puppet_dumpall').with(
         'ensure'    => 'present',
-        'command'   => "/bin/su - pe-postgres -s /bin/bash -c '/opt/puppet/bin/pg_dumpall' > /opt/dump/dumpall_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+        'command'   => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dumpall -f /opt/dump/dumpall_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
         'user'      => 'root',
         'hour'      => '23',
         'minute'    => '30',
@@ -248,11 +241,30 @@ describe 'puppet_master_manager::active' do
     }
   end
 
+  context "with replication enabled" do
+    let(:params) {
+      {
+        :enable_replication  => true,
+        :archive_mode        => 'hot_standby',
+        :passive_master      => 'passive.puppetlabs.vm',
+      }
+    }
+
+    it {
+      should contain_pe_postgresql__server__config_entry('archive_mode').with(
+        "ensure"  => "present",
+        "value"   => "hot_standby",
+      )
+    }
+  end
+
+
   context "Incorrect values" do
     let(:params) {
       {
-        "archive_mode"        => "sleeping",
-        "enable_replication"  => "maybe",
+        :archive_mode        => "sleeping",
+        :enable_replication  => "maybe",
+        :passive_master      => 'passive.puppetlabs.vm',
       }
     }
 

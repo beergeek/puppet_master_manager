@@ -127,32 +127,32 @@ class puppet_master_manager::active (
 
   cron { 'puppet_console_dumps':
     ensure   => present,
-    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c -p 5432 console -f ${dump_path}/console_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`'",
+    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c console -f ${dump_path}/console_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
   }
 
   cron { 'puppet_activity_dumps':
     ensure   => present,
-    command  => "/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-activity -f ${dump_path}/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-activity -f ${dump_path}/activity_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
   }
 
   cron { 'puppet_classifier_dumps':
     ensure   => present,
-    command  => "/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-classifier -f ${dump_path}/classifier_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-classifier -f ${dump_path}/classifier_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
   }
 
   cron { 'puppet_rbac_dumps':
     ensure   => present,
-    command  => "/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-rbac -f ${dump_path}/rbac_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-rbac -f ${dump_path}/rbac_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
   }
 
   cron { 'puppet_puppetdb_dumps':
     ensure   => present,
-    command  => "/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c -p 5432 pe-puppetdb -f ${dump_path}/puppetdb_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dump -Fc -C -c pe-puppetdb -f ${dump_path}/puppetdb_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
   }
 
   cron { 'puppet_dumpall':
     ensure   => present,
-    command  => "/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dumpall -f ${dump_path}/dumpall_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
+    command  => "/usr/bin/sudo -u pe-postgres /opt/puppet/bin/pg_dumpall -f ${dump_path}/dumpall_`/bin/date +'\\%Y\\%m\\%d\\%H\\%M'`",
     monthday => $dumpall_monthday,
   }
 
