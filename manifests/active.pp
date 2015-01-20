@@ -112,7 +112,7 @@ class puppet_master_manager::active (
       include pe_postgresql::server::contrib
 
       class { '::pe_postgresql::server':
-        listen_addresses        => $::ipaddress,
+        listen_addresses        => '*',
         ip_mask_allow_all_users => '0.0.0.0/0',
       }
 
