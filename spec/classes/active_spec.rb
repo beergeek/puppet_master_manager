@@ -244,12 +244,31 @@ describe 'puppet_master_manager::active' do
   context "with replication enabled" do
     let(:params) {
       {
-        :archive_mode        => 'hot_standby',
-        :enable_replication  => true,
-        :passive_master      => 'passive.puppetlabs.vm',
-        :replication_address => '192.168.0.0/28',
-        :replication_method  => 'md5',
+        :enable_replication         => true,
+        :passive_master             => 'passive.puppetlabs.vm',
+        :replication_address        => '192.168.0.0/28',
+        :replication_user           => 'replicator',
+        :replication_user_hash      => 'd8d8295af2a24691580159a4540d8a6b',
       }
+    }
+    let(:facts) {
+      {
+        :pe_concat_basedir => '/tmp',
+      }
+    }
+
+    it {
+      should contain_pe_postgresql__server__config_entry('archive_mode').with(
+        "ensure"  => "present",
+        "value"   => "hot_standby",
+      )
+    }
+
+    it {
+      should contain_pe_postgresql__server__config_entry('archive_command').with(
+        "ensure"  => "present",
+        "value"   => "cp %p /opt/puppet/var/lib/pgsql/9.2/backups/%f",
+      )
     }
 
     it {
@@ -276,7 +295,7 @@ describe 'puppet_master_manager::active' do
     it {
       should contain_pe_postgresql__server__role('replication_user').with(
         "replication"     => true,
-        "password_hash"   => "",
+        "password_hash"   => "d8d8295af2a24691580159a4540d8a6b",
       )
     }
 
@@ -285,10 +304,10 @@ describe 'puppet_master_manager::active' do
         'description' => 'replication user',
         'type'        => 'host',
         'database'    => 'replication',
-        'user'        => 'replication',
+        'user'        => 'replicator',
         'address'     => '192.168.0.0/28',
         'auth_method' => 'md5',
-      }
+      )
     }
 
   end
@@ -297,7 +316,7 @@ describe 'puppet_master_manager::active' do
   context "Incorrect values" do
     let(:params) {
       {
-        :archive_mode        => "sleeping",
+        :wal_level           => "sleeping",
         :enable_replication  => "maybe",
         :passive_master      => 'passive.puppetlabs.vm',
       }

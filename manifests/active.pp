@@ -44,21 +44,29 @@
 # Copyright 2014 Puppet Labs, unless otherwise noted.
 #
 class puppet_master_manager::active (
-  $archive_mode       = 'hot_standby',
-  $dump_path          = $puppet_master_manager::params::dump_path,
-  $dumpall_monthday   = $puppet_master_manager::params::dumpall_monthday,
-  $enable_replication = false,
-  $hour               = $puppet_master_manager::params::hour,
-  $minute             = $puppet_master_manager::params::minute,
-  $monthday           = $puppet_master_manager::params::monthday,
-  $passive_master     = undef,
-  $script_dir         = $puppet_master_manager::params::script_dir,
-  $rsync_user         = $puppet_master_manager::params::rsync_user,
+  $archive_mode               = $puppet_master_manager::params::archive_mode,
+  $archive_command            = $puppet_master_manager::params::archive_command,
+  $dump_path                  = $puppet_master_manager::params::dump_path,
+  $dumpall_monthday           = $puppet_master_manager::params::dumpall_monthday,
+  $enable_replication         = false,
+  $hour                       = $puppet_master_manager::params::hour,
+  $max_wal_senders            = $puppet_master_manager::params::max_wal_senders,
+  $minute                     = $puppet_master_manager::params::minute,
+  $monthday                   = $puppet_master_manager::params::monthday,
+  $passive_master             = undef,
+  $replication_address        = undef,
+  $replication_method         = $puppet_master_manager::params::replication_method,
+  $replication_user           = $puppet_master_manager::params::replication_user,
+  $replication_user_hash      = undef,
+  $rsync_user                 = $puppet_master_manager::params::rsync_user,
+  $script_dir                 = $puppet_master_manager::params::script_dir,
+  $wal_keep_segments          = $puppet_master_manager::params::wal_keep_segments,
+  $wal_level                  = $puppet_master_manager::params::wal_level,
 ) inherits puppet_master_manager::params  {
 
   # using 'member' function as will most likely add more modes to this array
-  if ! member(['hot_standby'],$archive_mode) {
-    fail("${archive_mode} is not a valid archive_mode")
+  if ! member(['hot_standby'],$wal_level) {
+    fail("${wal_level} is not a valid wal_level")
   }
 
   $rsync_ssl_dir        = '/etc/puppetlabs/puppet/ssl/ca/'
@@ -89,6 +97,42 @@ class puppet_master_manager::active (
         ensure => present,
         value  => $archive_mode,
       }
+
+      pe_postgresql::server::config_entry { 'archive_command':
+        ensure => present,
+        value  => $archive_command,
+      }
+
+      pe_postgresql::server::config_entry { 'wal_level':
+        ensure => present,
+        value  => $wal_level,
+      }
+
+      pe_postgresql::server::config_entry { 'max_wal_senders':
+        ensure => present,
+        value  => $max_wal_senders,
+      }
+
+      pe_postgresql::server::config_entry { 'wal_keep_segments':
+        ensure => present,
+        value  => $wal_keep_segments,
+      }
+
+      pe_postgresql::server::role { 'replication_user':
+        name          => $replication_user,
+        replication   => true,
+        password_hash => $replication_user_hash,
+      }
+
+      pe_postgresql::server::pg_hba_rule { 'replication_user':
+        address     => $replication_address,
+        auth_method => $replication_method,
+        database    => 'replication',
+        description => 'replication user',
+        type        => 'host',
+        user        => $replication_user,
+      }
+
     }
 
     file { 'script_dir':
