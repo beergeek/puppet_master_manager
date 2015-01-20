@@ -93,6 +93,22 @@ class puppet_master_manager::active (
 
     if $enable_replication {
 
+      class { '::pe_postgresql::globals':
+        user                 => 'pe-postgres',
+        group                => 'pe-postgres',
+        client_package_name  => 'pe-postgresql',
+        server_package_name  => 'pe-postgresql-server',
+        contrib_package_name => 'pe-postgresql-contrib',
+        service_name         => 'pe-postgresql',
+        default_database     => 'pe-postgres',
+        version              => '9.2',
+        bindir               => '/opt/puppet/bin',
+        datadir              => "/opt/puppet/var/lib/pgsql/9.2/data",
+        confdir              => "/opt/puppet/var/lib/pgsql/9.2/data",
+        psql_path            => '/opt/puppet/bin/psql',
+        needs_initdb         => true,
+      }
+
       pe_postgresql::server::config_entry { 'archive_mode':
         ensure => present,
         value  => $archive_mode,
