@@ -106,7 +106,14 @@ class puppet_master_manager::active (
         datadir              => "/opt/puppet/var/lib/pgsql/9.2/data",
         confdir              => "/opt/puppet/var/lib/pgsql/9.2/data",
         psql_path            => '/opt/puppet/bin/psql',
-        needs_initdb         => true,
+        needs_initdb         => false,
+      }
+
+      include pe_postgresql::server::contrib
+
+      class { '::pe_postgresql::server':
+        listen_addresses        => $::ipaddress,
+        ip_mask_allow_all_users => '0.0.0.0/0',
       }
 
       pe_postgresql::server::config_entry { 'archive_mode':
