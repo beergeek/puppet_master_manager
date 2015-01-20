@@ -244,18 +244,53 @@ describe 'puppet_master_manager::active' do
   context "with replication enabled" do
     let(:params) {
       {
-        :enable_replication  => true,
         :archive_mode        => 'hot_standby',
+        :enable_replication  => true,
         :passive_master      => 'passive.puppetlabs.vm',
+        :replication_address => '192.168.0.0/28',
+        :replication_method  => 'md5',
       }
     }
 
     it {
-      should contain_pe_postgresql__server__config_entry('archive_mode').with(
+      should contain_pe_postgresql__server__config_entry('wal_level').with(
         "ensure"  => "present",
         "value"   => "hot_standby",
       )
     }
+
+    it {
+      should contain_pe_postgresql__server__config_entry('max_wal_senders').with(
+        "ensure"  => "present",
+        "value"   => "5",
+      )
+    }
+
+    it {
+      should contain_pe_postgresql__server__config_entry('wal_keep_segments').with(
+        "ensure"  => "present",
+        "value"   => "200",
+      )
+    }
+
+    it {
+      should contain_pe_postgresql__server__role('replication_user').with(
+        "replication"     => true,
+        "password_hash"   => "",
+      )
+    }
+
+    it {
+      should contain_pe_postgresql__server__pg_hba_rule('replication_user').with(
+        'description' => 'replication user',
+        'type'        => 'host',
+        'database'    => 'replication',
+        'user'        => 'replication',
+        'address'     => '192.168.0.0/28',
+        'auth_method' => 'md5',
+      }
+    }
+
   end
 
 
