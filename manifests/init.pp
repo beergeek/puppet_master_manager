@@ -55,6 +55,7 @@ class puppet_master_manager (
   $active_master,
   $archive_mode               = $puppet_master_manager::params::archive_mode,
   $archive_command            = $puppet_master_manager::params::archive_command,
+  $archive_timeout            = $puppet_master_manager::params::archive_timeout,
   $dump_path                  = $puppet_master_manager::params::dump_path,
   $dumpall_monthday           = $puppet_master_manager::params::dumpall_monthday,
   $enable_replication         = false,
@@ -78,6 +79,7 @@ class puppet_master_manager (
     class { 'puppet_master_manager::active':
       archive_mode          => $archive_mode,
       archive_command       => $archive_command,
+      archive_timeout       => $archive_timeout,
       dump_path             => $dump_path,
       dumpall_monthday      => $dumpall_monthday,
       enable_replication    => $enable_replication,

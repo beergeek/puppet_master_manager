@@ -2,6 +2,7 @@ class puppet_master_manager::params {
 
   $archive_mode       = 'on'
   $archive_command    = 'cp %p /opt/puppet/var/lib/pgsql/9.2/backups/%f'
+  $archive_timeout    = '120'
   $dump_path          = '/opt/dump'
   $dumpall_monthday   = '1'
   $hour               = '23'

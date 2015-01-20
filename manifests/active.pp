@@ -46,6 +46,7 @@
 class puppet_master_manager::active (
   $archive_mode               = $puppet_master_manager::params::archive_mode,
   $archive_command            = $puppet_master_manager::params::archive_command,
+  $archive_timeout            = $puppet_master_manager::params::archive_timeout,
   $dump_path                  = $puppet_master_manager::params::dump_path,
   $dumpall_monthday           = $puppet_master_manager::params::dumpall_monthday,
   $enable_replication         = false,
@@ -68,6 +69,10 @@ class puppet_master_manager::active (
   if ! member(['hot_standby'],$wal_level) {
     fail("${wal_level} is not a valid wal_level")
   }
+  if ! member(['on','off'],$archive_mode) {
+    fail("${wal_level} is not a valid archive_mode")
+  }
+  validate_bool($enable_replication)
 
   $rsync_ssl_dir        = '/etc/puppetlabs/puppet/ssl/ca/'
   $incron_ssl_condition = "${::settings::ssldir}/ca/signed IN_CREATE,IN_DELETE,IN_MODIFY"
@@ -124,6 +129,11 @@ class puppet_master_manager::active (
       pe_postgresql::server::config_entry { 'archive_command':
         ensure => present,
         value  => $archive_command,
+      }
+
+      pe_postgresql::server::config_entry { 'archive_timeout':
+        ensure => present,
+        value  => $archive_timeout,
       }
 
       pe_postgresql::server::config_entry { 'wal_level':

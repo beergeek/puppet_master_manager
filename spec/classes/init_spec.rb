@@ -73,6 +73,13 @@ describe 'puppet_master_manager' do
     }
 
     it {
+      should contain_pe_postgresql__server__config_entry('archive_timeout').with(
+        "ensure"  => "present",
+        "value"   => "120",
+      )
+    }
+
+    it {
       should contain_pe_postgresql__server__config_entry('wal_level').with(
         "ensure"  => "present",
         "value"   => "hot_standby",
