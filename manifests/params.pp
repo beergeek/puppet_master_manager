@@ -1,6 +1,6 @@
 class puppet_master_manager::params {
 
-  $archive_mode       = 'hot_standby'
+  $archive_mode       = 'on'
   $archive_command    = 'cp %p /opt/puppet/var/lib/pgsql/9.2/backups/%f'
   $dump_path          = '/opt/dump'
   $dumpall_monthday   = '1'

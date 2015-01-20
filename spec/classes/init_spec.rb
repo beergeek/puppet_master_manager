@@ -61,7 +61,7 @@ describe 'puppet_master_manager' do
     it {
       should contain_pe_postgresql__server__config_entry('archive_mode').with(
         "ensure"  => "present",
-        "value"   => "hot_standby",
+        "value"   => "on",
       )
     }
 
