@@ -20,6 +20,13 @@ describe 'puppet_master_manager::active' do
     }
 
     it {
+      should contain_pe_postgresql__server__config_entry('archive_mode').with(
+        "ensure"  => "present",
+        "value"   => "hot_standby",
+      )
+    }
+
+    it {
       should contain_file('dump_directory').with(
         'ensure'  => 'directory',
         'path'    => '/opt/dump',
@@ -238,6 +245,19 @@ describe 'puppet_master_manager::active' do
         'monthday'  => '1',
         'require'   => 'File[dump_directory]'
       )
+    }
+  end
+
+  context "Incorrect values" do
+    let(:params) {
+      {
+        "archive_mode"        => "sleeping",
+        "enable_replication"  => "maybe",
+      }
+    }
+
+    it {
+      expect { subject }.to raise_error(Puppet::Error, /is not a valid/)
     }
   end
 end

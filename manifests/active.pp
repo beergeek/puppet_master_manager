@@ -44,15 +44,22 @@
 # Copyright 2014 Puppet Labs, unless otherwise noted.
 #
 class puppet_master_manager::active (
-  $dump_path        = $puppet_master_manager::params::dump_path,
-  $dumpall_monthday = $puppet_master_manager::params::dumpall_monthday,
-  $hour             = $puppet_master_manager::params::hour,
-  $minute           = $puppet_master_manager::params::minute,
-  $monthday         = $puppet_master_manager::params::monthday,
-  $passive_master   = undef,
-  $script_dir       = $puppet_master_manager::params::script_dir,
-  $rsync_user       = $puppet_master_manager::params::rsync_user,
+  $archive_mode       = 'hot_standby',
+  $dump_path          = $puppet_master_manager::params::dump_path,
+  $dumpall_monthday   = $puppet_master_manager::params::dumpall_monthday,
+  $enable_replication = false,
+  $hour               = $puppet_master_manager::params::hour,
+  $minute             = $puppet_master_manager::params::minute,
+  $monthday           = $puppet_master_manager::params::monthday,
+  $passive_master     = undef,
+  $script_dir         = $puppet_master_manager::params::script_dir,
+  $rsync_user         = $puppet_master_manager::params::rsync_user,
 ) inherits puppet_master_manager::params  {
+
+  # using 'member' function as will most likely add more modes to this array
+  if ! member(['hot_standby'],$archive_mode) {
+    fail("${archive_mode} is not a valid archive_mode")
+  }
 
   $rsync_ssl_dir        = '/etc/puppetlabs/puppet/ssl/ca/'
   $incron_ssl_condition = "${::settings::ssldir}/ca/signed IN_CREATE,IN_DELETE,IN_MODIFY"
@@ -75,6 +82,14 @@ class puppet_master_manager::active (
 
   if $passive_master {
     ensure_packages(['rsync','incron'])
+
+    if $enable_replication {
+
+      pe_postgresql::server::config_entry { 'archive_mode':
+        ensure => present,
+        value  => $archive_mode,
+      }
+    }
 
     file { 'script_dir':
       ensure => directory,
