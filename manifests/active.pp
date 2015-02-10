@@ -96,77 +96,78 @@ class puppet_master_manager::active (
   if $passive_master {
     ensure_packages(['rsync','incron'])
 
-    if $enable_replication {
+# removed until PE-7875 is resolved
+    #if $enable_replication {
 
-      class { '::pe_postgresql::globals':
-        user                 => 'pe-postgres',
-        group                => 'pe-postgres',
-        client_package_name  => 'pe-postgresql',
-        server_package_name  => 'pe-postgresql-server',
-        contrib_package_name => 'pe-postgresql-contrib',
-        service_name         => 'pe-postgresql',
-        default_database     => 'pe-postgres',
-        version              => '9.2',
-        bindir               => '/opt/puppet/bin',
-        datadir              => "/opt/puppet/var/lib/pgsql/9.2/data",
-        confdir              => "/opt/puppet/var/lib/pgsql/9.2/data",
-        psql_path            => '/opt/puppet/bin/psql',
-        needs_initdb         => false,
-      }
+#      class { '::pe_postgresql::globals':
+#        user                 => 'pe-postgres',
+#        group                => 'pe-postgres',
+#        client_package_name  => 'pe-postgresql',
+#        server_package_name  => 'pe-postgresql-server',
+#        contrib_package_name => 'pe-postgresql-contrib',
+#        service_name         => 'pe-postgresql',
+#        default_database     => 'pe-postgres',
+#        version              => '9.2',
+#        bindir               => '/opt/puppet/bin',
+#        datadir              => "/opt/puppet/var/lib/pgsql/9.2/data",
+#        confdir              => "/opt/puppet/var/lib/pgsql/9.2/data",
+#        psql_path            => '/opt/puppet/bin/psql',
+#        needs_initdb         => false,
+#      }
 
-      include pe_postgresql::server::contrib
+#      include pe_postgresql::server::contrib
 
-      class { '::pe_postgresql::server':
-        listen_addresses        => '*',
-        ip_mask_allow_all_users => '0.0.0.0/0',
-      }
+#      class { '::pe_postgresql::server':
+#        listen_addresses        => '*',
+#        ip_mask_allow_all_users => '0.0.0.0/0',
+#      }
 
-      pe_postgresql::server::config_entry { 'archive_mode':
-        ensure => present,
-        value  => $archive_mode,
-      }
+#      pe_postgresql::server::config_entry { 'archive_mode':
+#        ensure => present,
+#        value  => $archive_mode,
+#      }
 
-      pe_postgresql::server::config_entry { 'archive_command':
-        ensure => present,
-        value  => $archive_command,
-      }
+#      pe_postgresql::server::config_entry { 'archive_command':
+#        ensure => present,
+#        value  => $archive_command,
+#      }
 
-      pe_postgresql::server::config_entry { 'archive_timeout':
-        ensure => present,
-        value  => $archive_timeout,
-      }
+#      pe_postgresql::server::config_entry { 'archive_timeout':
+#        ensure => present,
+#        value  => $archive_timeout,
+#      }
 
-      pe_postgresql::server::config_entry { 'wal_level':
-        ensure => present,
-        value  => $wal_level,
-      }
+#      pe_postgresql::server::config_entry { 'wal_level':
+#        ensure => present,
+#        value  => $wal_level,
+#      }
 
-      pe_postgresql::server::config_entry { 'max_wal_senders':
-        ensure => present,
-        value  => $max_wal_senders,
-      }
+#      pe_postgresql::server::config_entry { 'max_wal_senders':
+#        ensure => present,
+#        value  => $max_wal_senders,
+#      }
 
-      pe_postgresql::server::config_entry { 'wal_keep_segments':
-        ensure => present,
-        value  => $wal_keep_segments,
-      }
+#      pe_postgresql::server::config_entry { 'wal_keep_segments':
+#        ensure => present,
+#        value  => $wal_keep_segments,
+#      }
 
-      pe_postgresql::server::role { 'replication_user':
-        name          => $replication_user,
-        replication   => true,
-        password_hash => $replication_user_hash,
-      }
+#      pe_postgresql::server::role { 'replication_user':
+#        name          => $replication_user,
+#        replication   => true,
+#        password_hash => $replication_user_hash,
+#      }
 
-      pe_postgresql::server::pg_hba_rule { 'replication_user':
-        address     => $replication_address,
-        auth_method => $replication_method,
-        database    => 'replication',
-        description => 'replication user',
-        type        => 'host',
-        user        => $replication_user,
-      }
+#      pe_postgresql::server::pg_hba_rule { 'replication_user':
+#        address     => $replication_address,
+#        auth_method => $replication_method,
+#        database    => 'replication',
+#        description => 'replication user',
+#        type        => 'host',
+#        user        => $replication_user,
+#      }
 
-    }
+#    }
 
     file { 'script_dir':
       ensure => directory,
