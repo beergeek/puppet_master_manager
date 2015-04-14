@@ -126,6 +126,11 @@ Defaults to `/root/scripts`.
 User for rsync job to Secondary (Passive) Master.
 Defaults to `root`.
 
+#####`replication_address`
+Address of Secondary (Passive) Master.
+IPv6 / IPv4 addresses with CIDR Mask are accepted.
+
+
 ## Limitations
 
 RHEL 6
