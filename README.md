@@ -62,6 +62,17 @@ Classify active and passive masters with `puppet_master_manager`:
     }
 ```
 
+To enable replication:
+
+```puppet
+    class { 'puppet_master_manager':
+      enable_replication  => true,
+      active_master       => 'active.puppetlabs.vm',
+      passive_master      => 'passive.puppetlabs.vm',
+      replication_address => '10.0.0.1/32',
+    }
+```    
+
 ## Usage
 
 ## Reference
@@ -114,6 +125,11 @@ Defaults to `/root/scripts`.
 #####`rsync_user`
 User for rsync job to Secondary (Passive) Master.
 Defaults to `root`.
+
+#####`replication_address`
+Address of Secondary (Passive) Master.
+IPv6 / IPv4 addresses with CIDR Mask are accepted.
+
 
 ## Limitations
 
