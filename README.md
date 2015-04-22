@@ -116,8 +116,8 @@ User for rsync job to Secondary (Passive) Master.
 Defaults to `root`.
 
 ## Limitations
-
-RHEL 6
+* SSH keys should be setup beforehand to allow seamless certificate rsync'ing
+* Tested on CentOS 6 only
 
 ## Development
 
